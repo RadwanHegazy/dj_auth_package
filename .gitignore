@@ -1,0 +1,4 @@
+core
+*.sqlite3
+manage.py
+__pycache__
