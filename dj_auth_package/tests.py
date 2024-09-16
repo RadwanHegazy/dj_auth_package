@@ -17,6 +17,7 @@ class TestEndpoints (TestCase) :
     def setUp(self):
         self.client = Client()
         self.login_url = reverse('auth_login')
+        self.profile_url = reverse('profile')
         self.register_url = reverse('auth_register')
         self.update_user_password = reverse('change_password')
         self.user = get_user_model()
@@ -76,3 +77,12 @@ class TestEndpoints (TestCase) :
             'Authorization' : f"Bearer {AccessToken.for_user(u)}"
         })
         self.assertNotEqual(response.status_code, 201)
+
+    def test_profile_endpoint (self) : 
+        user = self.create_test_user()
+        access_token = AccessToken.for_user(user)
+        response = self.client.get(self.profile_url,headers={
+            'Authorization' : f"Bearer {access_token}"
+        })
+        
+        self.assertEqual(response.status_code, 200)

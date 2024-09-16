@@ -9,6 +9,12 @@ from datetime import datetime
 
 User = get_user_model()
 
+
+class ProfileSerializer(serializers.ModelSerializer) : 
+    class Meta:
+        model = User
+        exclude = ['password']
+
 class BaseSerialzer (serializers.Serializer) :
     password = serializers.CharField(write_only=True, style={'input_type':'password'})
 
