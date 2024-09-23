@@ -6,6 +6,7 @@ from django.contrib.auth.password_validation import validate_password
 from .models import ResetPasswordModel
 from .utils import send_reset_password_email
 from datetime import datetime
+from django.db.models.fields.files import ImageFileDescriptor
 
 User = get_user_model()
 
@@ -59,7 +60,10 @@ class RegisterSerializer (BaseSerialzer) :
         super().__init__(*args, **kwargs)
         self.custom_fields = User.REQUIRED_FIELDS + [User.USERNAME_FIELD]
         for field in self.custom_fields:
-            self.fields[field] = serializers.CharField()
+            if type(getattr(User,field)) == ImageFileDescriptor:
+                self.fields[field] = serializers.ImageField()
+            else:
+                self.fields[field] = serializers.CharField()
     
     def validate(self, attrs) : 
         username_field = attrs.get(self.custom_fields[-1])
